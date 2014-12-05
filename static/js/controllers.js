@@ -40,11 +40,13 @@ angular.module('tradebindrControllers', [])
 
     $scope.addCard = function() {
         var cardName = $window.prompt('Card name?', '');
-        $http.post(
-            '/card',
-            { name: cardName }
-        ).success(function(data) {
-            fetchUsersCards();
-        });
+        if (cardName != null) {
+            $http.post(
+                '/card',
+                { name: cardName }
+            ).success(function(data) {
+                fetchUsersCards();
+            });
+        }
     }
 });
