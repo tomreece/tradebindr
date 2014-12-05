@@ -1,5 +1,5 @@
 import os
-from flask import Flask, abort, request, jsonify
+from flask import Flask, abort, request, jsonify, redirect
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager, login_required, login_user, current_user, logout_user
 from flask.ext.bcrypt import Bcrypt
@@ -74,7 +74,7 @@ class Card(db.Model):
 @app.route('/')
 def index():
     # for something
-    return "todo"
+    return redirect('/static/index.html')
 
 @app.route('/login', methods=['POST'])
 def login():
