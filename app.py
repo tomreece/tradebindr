@@ -29,6 +29,7 @@ class User(db.Model):
     password = db.Column(db.String)
     lat = db.Column(db.Float)
     lon = db.Column(db.Float)
+    last_active = db.Column(db.DateTime(timezone=True), index=True)
 
     def __init__(self, name, password):
         self.name = name
@@ -50,7 +51,7 @@ class User(db.Model):
 
     class Serializer(Serializer):
         class Meta:
-            fields = ("id", "name", "lat", "lon")
+            fields = ("id", "name", "lat", "lon", "last_active")
 
 class Card(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -113,6 +114,7 @@ def user_location():
     posted_location = request.get_json()
     current_user.lat = posted_location['lat']
     current_user.lon = posted_location['lon']
+    current_user.last_active = db.func.now()
     db.session.commit()
     return "updated users location"
 
