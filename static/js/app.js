@@ -17,17 +17,12 @@ angular.module('tradebindr', ['ngRoute', 'tradebindrControllers', 'tradebindrDir
   .factory('authHttpResponseInterceptor', ['$q', '$location', function($q, $location) {
     return {
       response: function(response) {
-        if (response.status === 401) {
-          //console.log("Response 401");
-        }else if (response.status === 403){
-          window.location = "/admin/login";
-        }
         return response || $q.when(response);
       },
       responseError: function(rejection) {
         if (rejection.status === 401) {
           //console.log("Response Error 401",rejection);
-          window.location = "/admin/login";
+          window.location = "/";
         }
         return $q.reject(rejection);
       }
