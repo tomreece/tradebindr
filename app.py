@@ -118,13 +118,18 @@ def user_location():
     db.session.commit()
     return "updated users location"
 
+@app.route('/user')
+@login_required
+def user_get():
+    return user_get_by_name(current_user.name)
+
 @app.route('/user/<name>')
-def user_get(name):
+def user_get_by_name(name):
     # for returning a list of cards a user has
     user = User.query.filter_by(name=name).first()
     if not user:
         abort(404)
-    cards = user.cards.all()
+    cards = user.cards.order_by(Card.name).all()
     return jsonify(user=User.Serializer(user).data,
                    cards=Card.Serializer(cards, many=True).data)
 
@@ -168,4 +173,4 @@ def delete_card(card_id):
 #
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

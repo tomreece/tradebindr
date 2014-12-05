@@ -1,0 +1,43 @@
+body {
+    background-color: #bdc3c7;
+}
+
+#header {
+    background-color: #2c3e50;
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+#body {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#logo {
+    font-size: 28px;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+#collection-table {
+    background: white;
+    width: 100%;
+}
+
+.collection-table-delete-col {
+    text-align: right;
+}
+
+.button-small {
+    font-size: 12px;
+}
+
+.button-primary {
+    color: #ffffff;
+    border-radius: 4px;
+    background: #e74c3c;
+}
+
+.centered {
+    text-align: center;
+}
