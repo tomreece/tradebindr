@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+<form method="POST" action="{{ url_for('login') }}" class="pure-form pure-form-stacked">
+    <fieldset>
+        <input type="text" name="name" class="pure-input-1" placeholder="username">
+        <input type="password" name="password" class="pure-input-1" placeholder="password">
+        <button type="submit" class="pure-button button-primary pure-input-1">Login</button>
+    </fieldset>
+</form>
+<div class="centered">
+    <p>or</p>
+    <a href="{{ url_for('create_user') }}">Create an account</a>
+</div>
+{% endblock %}

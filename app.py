@@ -1,5 +1,5 @@
 import os
-from flask import Flask, abort, request, jsonify, redirect
+from flask import Flask, abort, request, jsonify, redirect, render_template, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager, login_required, login_user, current_user, logout_user
 from flask.ext.bcrypt import Bcrypt
@@ -24,6 +24,8 @@ def load_user(id):
 #
 
 class User(db.Model):
+    __tablename__ = 'users'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
     password = db.Column(db.String)
@@ -54,9 +56,11 @@ class User(db.Model):
             fields = ("id", "name", "lat", "lon", "last_active")
 
 class Card(db.Model):
+    __tablename__ = 'cards'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship('User', backref=db.backref('cards', lazy='dynamic'))
 
     def __init__(self, name, user_id):
@@ -73,39 +77,62 @@ class Card(db.Model):
 
 @app.route('/')
 def index():
-    # for something
-    return redirect('/static/index.html')
+    # todo, detect if user already logged in and redirect to /home if so
+    return render_template('login.html')
 
 @app.route('/login', methods=['POST'])
 def login():
     # for logging in a user
-    posted_user = request.get_json()
-    user = User.query.filter(db.func.lower(User.name) == posted_user['name'].lower()).first()
-    if user and bcrypt.check_password_hash(user.password, posted_user['password']):
+    user = User.query.filter(db.func.lower(User.name) == request.form['name'].lower()).first()
+    if user and bcrypt.check_password_hash(user.password, request.form['password']):
         login_user(user)
-        return "logged in as {}".format(user.name)
+        return redirect(url_for('home'))
     else:
         abort(401)
 
-@app.route('/logout')
-@login_required
-def logout():
-    # for logging out a user
-    logout_user()
-    return "logged out"
+@app.route('/user/create')
+def create_user():
+    return render_template('create_account.html')
 
-@app.route('/user', methods=['POST'])
-def add_user():
+@app.route('/user/create', methods=['POST'])
+def create_user_post():
     # for adding a new user to the database
-    posted_user = request.get_json()
-    existing_user = User.query.filter(db.func.lower(User.name) == posted_user['name'].lower()).first()
+    existing_user = User.query.filter(db.func.lower(User.name) == request.form['name'].lower()).first()
     if existing_user:
         return "user already exists"
-    hashed_password = bcrypt.generate_password_hash(posted_user['password'])
-    new_user = User(posted_user['name'], hashed_password)
+    hashed_password = bcrypt.generate_password_hash(request.form['password'])
+    new_user = User(request.form['name'], hashed_password)
     db.session.add(new_user)
     db.session.commit()
-    return "added a new user"
+    login_user(new_user)
+    return redirect(url_for('home'))
+
+@app.route('/home')
+@login_required
+def home():
+    cards = current_user.cards.order_by(db.func.lower(Card.name)).all()
+    return render_template('home.html', cards=cards)
+
+@app.route('/card/<int:card_id>/remove')
+@login_required
+def remove_card(card_id):
+    # for removing a card from the logged in users collection
+    card = Card.query.get(card_id)
+    if not card.user_id == current_user.id:
+        abort(401)
+    if card:
+        db.session.delete(card)
+        db.session.commit()
+    return redirect(url_for('home'))
+
+@app.route('/card/add', methods=['POST'])
+@login_required
+def add_card():
+    # for adding a card to the logged in users collection
+    new_card = Card(request.form['card_name'], current_user.id)
+    db.session.add(new_card)
+    db.session.commit()
+    return redirect(url_for('home'))
 
 @app.route('/user/location', methods=['POST'])
 @login_required
@@ -118,21 +145,6 @@ def user_location():
     db.session.commit()
     return "updated users location"
 
-@app.route('/user')
-@login_required
-def user_get():
-    return user_get_by_name(current_user.name)
-
-@app.route('/user/<name>')
-def user_get_by_name(name):
-    # for returning a list of cards a user has
-    user = User.query.filter_by(name=name).first()
-    if not user:
-        abort(404)
-    cards = user.cards.order_by(Card.name).all()
-    return jsonify(user=User.Serializer(user).data,
-                   cards=Card.Serializer(cards, many=True).data)
-
 @app.route('/user/nearby')
 @login_required
 def user_nearby():
@@ -144,29 +156,6 @@ def user_nearby():
 def user_nearby_search():
     # for searching for cards of nearby users
     return "todo"
-
-@app.route('/card', methods=['POST'])
-@login_required
-def add_card():
-    # for adding a card to the logged in users collection
-    posted_card = request.get_json()
-    new_card = Card(posted_card['name'], current_user.id)
-    db.session.add(new_card)
-    db.session.commit()
-    return "added a card"
-
-@app.route('/card/<int:card_id>', methods=['DELETE'])
-@login_required
-def delete_card(card_id):
-    # for deleting a card from the logged in users collection
-    card = Card.query.get(card_id)
-    if not card:
-        abort(404)
-    if not card.user_id == current_user.id:
-        abort(401)
-    db.session.delete(card)
-    db.session.commit()
-    return "deleted the card"
 
 #
 # MAIN
