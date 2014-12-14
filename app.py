@@ -170,6 +170,11 @@ def user_nearby_search():
     # for searching for cards of nearby users
     return "todo"
 
+@app.route('/messages')
+@login_required
+def messages():
+    return render_template('messages.html')
+
 #
 # MAIN
 #
