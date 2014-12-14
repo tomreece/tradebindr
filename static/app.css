@@ -23,7 +23,11 @@ body {
     font-family: 'Ubuntu', sans-serif;
 }
 
-#collection-table {
+.nav-bar {
+    margin-bottom: 20px;
+}
+
+#collection-table, #nearby-traders-table {
     background: white;
     width: 100%;
 }
@@ -44,4 +48,8 @@ body {
 
 .centered {
     text-align: center;
+}
+
+#add-card-form fieldset {
+    padding-top: 0px;
 }

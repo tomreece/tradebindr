@@ -113,6 +113,12 @@ def home():
     cards = current_user.cards.order_by(db.func.lower(Card.name)).all()
     return render_template('home.html', cards=cards)
 
+@app.route('/nearby')
+@login_required
+def nearby():
+    users = User.query.order_by(db.func.lower(User.name)).all()
+    return render_template('nearby.html', users=users)
+
 @app.route('/card/<int:card_id>/remove')
 @login_required
 def remove_card(card_id):
@@ -133,6 +139,13 @@ def add_card():
     db.session.add(new_card)
     db.session.commit()
     return redirect(url_for('home'))
+
+@app.route('/user/<int:user_id>')
+@login_required
+def user_by_id(user_id):
+    user = User.query.get(user_id)
+    cards = user.cards.order_by(db.func.lower(Card.name)).all()
+    return render_template('user.html', user=user, cards=cards)
 
 @app.route('/user/location', methods=['POST'])
 @login_required

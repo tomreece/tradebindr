@@ -1,12 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="pure-g">
-<div class="pure-u-1 centered">
-	<a class="pure-button button-primary" href="#">View Nearby Traders</a>
+<div class="nav-bar pure-u-1 centered">
+	<a class="pure-button button-primary" href="{{ url_for('nearby') }}">View Nearby Traders</a>
 </div>
 <div class="pure-u-1">
-	<p>Your Collection</p>
-  <form method="POST" action="{{ url_for('add_card') }}" class="pure-form">
+  <form id="add-card-form" method="POST" action="{{ url_for('add_card') }}" class="pure-form">
       <fieldset>
           <input name="card_name" type="text" class="pure-u-1" placeholder="add a card">
           <!--button type="submit" class="pure-button button-primary"><i class="fa fa-plus"></i></button-->
@@ -15,7 +14,7 @@
 	<table id="collection-table" class="pure-table pure-table-horizontal">
     <thead>
       <tr>
-        <th>Name</th>
+        <th>Your Collection</th>
         <th></th>
       </tr>
     </thead>
@@ -29,7 +28,7 @@
         </tr>
       {% else %}
         <tr>
-          <td colspan="2">Nothing in your collection, try adding some cards!</td>
+          <td colspan="2">Nothing in your collection. Try adding some cards!</td>
         </tr>
       {% endfor %}
     </tbody>
