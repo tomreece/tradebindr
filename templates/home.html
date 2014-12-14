@@ -3,38 +3,36 @@
 {% set show_nav = True %}
 {% block content %}
 <div class="pure-g">
-<div class="nav-bar pure-u-1 centered">
-	<!--a class="pure-button button-primary" href="{{ url_for('nearby') }}">View Nearby Traders</a-->
-</div>
-<div class="pure-u-1">
-  <form id="add-card-form" method="POST" action="{{ url_for('add_card') }}" class="pure-form">
-      <fieldset>
-          <input name="card_name" type="text" class="pure-u-1" placeholder="add a card">
-          <!--button type="submit" class="pure-button button-primary"><i class="fa fa-plus"></i></button-->
-      </fieldset>
-  </form>
-	<table id="collection-table" class="pure-table pure-table-horizontal">
-    <thead>
-      <tr>
-        <th>Your Collection</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for card in cards %}
-        <tr>
-          <td>{{ card.name }}</td>
-          <td class="collection-table-delete-col">
-            <a href="{{ url_for('remove_card', card_id=card.id) }}" class="pure-button button-primary"><i class="fa fa-trash"></i></a>
-          </td>
-        </tr>
-      {% else %}
-        <tr>
-          <td colspan="2">Nothing in your collection. Try adding some cards!</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+    <div class="pure-u-1">
+        <form id="add-card-form" method="POST" action="{{ url_for('add_card') }}" class="pure-form">
+            <fieldset>
+                <input name="card_name" type="text" class="pure-u-1" placeholder="add a card">
+            </fieldset>
+        </form>
+        <table id="collection-table" class="pure-table pure-table-horizontal">
+            <thead>
+                <tr>
+                    <th>Your Collection</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for card in cards %}
+                <tr>
+                    <td>{{ card.name }}</td>
+                    <td class="collection-table-delete-col">
+                        <a href="{{ url_for('remove_card', card_id=card.id) }}" class="pure-button button-primary">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="2">Nothing in your collection. Try adding some cards!</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

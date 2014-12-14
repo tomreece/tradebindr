@@ -3,33 +3,29 @@
 {% set show_nav = True %}
 {% block content %}
 <div class="pure-g">
-<div class="nav-bar pure-u-1 centered">
-	<!--a class="pure-button button-primary" href="{{ url_for('home') }}">Manage Your Collection</a-->
-</div>
-<div class="pure-u-1">
-  <!--form method="POST" action="#" class="pure-form">
-      <fieldset>
-          <input name="card_name" type="text" class="pure-u-1" placeholder="search for a card">
-      </fieldset>
-  </form-->
-	<table id="nearby-traders-table" class="pure-table pure-table-horizontal">
-    <thead>
-      <tr>
-        <th>Nearby Traders</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for user in users %}
-        <tr>
-          <td><a href="{{ url_for('user_by_id', user_id=user.id) }}" class="user-name-link">{{ user.name }}</a></td>
-        </tr>
-      {% else %}
-        <tr>
-          <td>No nearby traders. Spread the word!</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+    <div class="pure-u-1">
+        <table id="nearby-traders-table" class="pure-table pure-table-horizontal">
+            <thead>
+                <tr>
+                    <th>Nearby Traders</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('user_by_id', user_id=user.id) }}" class="user-name-link">
+                            {{ user.name }}
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td>No nearby traders. Tell your friends about tradebindr.com!</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

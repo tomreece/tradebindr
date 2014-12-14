@@ -3,37 +3,25 @@
 {% set show_nav = True %}
 {% block content %}
 <div class="pure-g">
-<div class="nav-bar pure-u-1 centered">
-	<!--a class="pure-button button-primary" href="{{ url_for('home') }}">Manage Your Collection</a-->
-</div>
-<div class="pure-u-1">
-  <!--form method="POST" action="#" class="pure-form">
-      <fieldset>
-          <input name="card_name" type="text" class="pure-u-1" placeholder="search for a card">
-      </fieldset>
-  </form-->
-	<table id="collection-table" class="pure-table pure-table-horizontal">
-    <thead>
-      <tr>
-        <th>{{ user.name }}'s Collection</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for card in cards %}
-        <tr style="height: 51px;">
-          <td>{{ card.name }}</td>
-          <td class="collection-table-delete-col">
-            <!--a href="#" class="pure-button button-primary"><i class="fa fa-trash"></i></a-->
-          </td>
-        </tr>
-      {% else %}
-        <tr>
-          <td colspan="2">Empty</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+    <div class="pure-u-1">
+        <table id="collection-table" class="pure-table pure-table-horizontal">
+            <thead>
+                <tr>
+                    <th>{{ user.name }}'s Collection</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for card in cards %}
+                <tr style="height: 51px;">
+                    <td>{{ card.name }}</td>
+                </tr>
+                {% else %}
+                <tr style="height: 51px;">
+                    <td>Empty</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
