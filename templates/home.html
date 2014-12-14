@@ -1,8 +1,9 @@
 {% extends "layout.html" %}
+{% set active_page = "Collection" %}
 {% block content %}
 <div class="pure-g">
 <div class="nav-bar pure-u-1 centered">
-	<a class="pure-button button-primary" href="{{ url_for('nearby') }}">View Nearby Traders</a>
+	<!--a class="pure-button button-primary" href="{{ url_for('nearby') }}">View Nearby Traders</a-->
 </div>
 <div class="pure-u-1">
   <form id="add-card-form" method="POST" action="{{ url_for('add_card') }}" class="pure-form">
