@@ -14,20 +14,16 @@
     <thead>
       <tr>
         <th>Nearby Traders</th>
-        <th></th>
       </tr>
     </thead>
     <tbody>
       {% for user in users %}
         <tr>
-          <td>{{ user.name }}</td>
-          <td class="collection-table-delete-col">
-            <a href="{{ url_for('user_by_id', user_id=user.id) }}" class="pure-button button-primary"><i class="fa fa-arrow-right"></i></a>
-          </td>
+          <td><a href="{{ url_for('user_by_id', user_id=user.id) }}" class="user-name-link">{{ user.name }}</a></td>
         </tr>
       {% else %}
         <tr>
-          <td colspan="2">No nearby traders. Spread the word!</td>
+          <td>No nearby traders. Spread the word!</td>
         </tr>
       {% endfor %}
     </tbody>
