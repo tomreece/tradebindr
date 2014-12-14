@@ -1,4 +1,5 @@
 import os
+import datetime
 from flask import Flask, abort, request, jsonify, redirect, render_template, url_for
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager, login_required, login_user, current_user, logout_user
@@ -116,7 +117,20 @@ def home():
 @app.route('/nearby')
 @login_required
 def nearby():
-    users = User.query.order_by(db.func.lower(User.name)).all()
+    DISTANCE_THRESHOLD = 0.003
+    TIME_THRESHOLD = 15 # minutes
+    if current_user.lat and current_user.lon:
+        users = (User.query
+            .filter(User.lat > current_user.lat - DISTANCE_THRESHOLD)
+            .filter(User.lat < current_user.lat + DISTANCE_THRESHOLD)
+            .filter(User.lon > current_user.lon - DISTANCE_THRESHOLD)
+            .filter(User.lon < current_user.lon + DISTANCE_THRESHOLD)
+            .filter(User.last_active > db.func.now() - datetime.timedelta(minutes=TIME_THRESHOLD))
+            .filter(User.id != current_user.id)
+            .order_by(db.func.lower(User.name))
+            .all())
+    else:
+        users = []
     return render_template('nearby.html', users=users)
 
 @app.route('/card/<int:card_id>/remove')
@@ -151,12 +165,11 @@ def user_by_id(user_id):
 @login_required
 def user_location():
     # for updating the users location
-    posted_location = request.get_json()
-    current_user.lat = posted_location['lat']
-    current_user.lon = posted_location['lon']
+    current_user.lat = request.form['lat']
+    current_user.lon = request.form['lon']
     current_user.last_active = db.func.now()
     db.session.commit()
-    return "updated users location"
+    return "ok"
 
 @app.route('/user/nearby')
 @login_required
