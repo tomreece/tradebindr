@@ -40,7 +40,7 @@
                     "{{ url_for('user_location') }}",
                     { lat: position.coords.latitude, lon: position.coords.longitude}
                 );
-            })
+            }, function(err) { /* do nothing for now */ }, { enableHighAccuracy: true });
         }
     </script>
     {% endif %}
