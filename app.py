@@ -93,11 +93,12 @@ def login():
 
 @app.route('/user/create')
 def create_user():
+    # for viewing the create account page
     return render_template('create_account.html')
 
 @app.route('/user/create', methods=['POST'])
 def create_user_post():
-    # for adding a new user to the database
+    # for adding a new user
     existing_user = User.query.filter(db.func.lower(User.name) == request.form['name'].lower()).first()
     if existing_user:
         return "user already exists"
@@ -111,6 +112,7 @@ def create_user_post():
 @app.route('/home')
 @login_required
 def home():
+    # for viewing the logged in users collection
     cards = current_user.cards.order_by(db.func.lower(Card.name)).all()
     return render_template('home.html', cards=cards)
 
@@ -157,6 +159,7 @@ def add_card():
 @app.route('/user/<int:user_id>')
 @login_required
 def user_by_id(user_id):
+    # for viewing a users collection
     user = User.query.get(user_id)
     cards = user.cards.order_by(db.func.lower(Card.name)).all()
     return render_template('user.html', user=user, cards=cards)
@@ -170,18 +173,6 @@ def user_location():
     current_user.last_active = db.func.now()
     db.session.commit()
     return "ok"
-
-@app.route('/user/nearby')
-@login_required
-def user_nearby():
-    # for returning users that are nearby the logged in user
-    return "todo"
-
-@app.route('/user/nearby/search')
-@login_required
-def user_nearby_search():
-    # for searching for cards of nearby users
-    return "todo"
 
 @app.route('/messages')
 @login_required
