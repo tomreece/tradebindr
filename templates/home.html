@@ -6,7 +6,10 @@
     <div class="pure-u-1">
         <form id="add-card-form" method="POST" action="{{ url_for('add_card') }}" class="pure-form">
             <fieldset>
-                <input name="card_name" type="text" class="pure-u-1" placeholder="add a card">
+                <input id="add-card-input" name="card_name" type="text" class="pure-u-1" placeholder="add a card" autocomplete="off" autocorrect="off">
+                <div id="autocomplete" class="pure-menu pure-menu-open">
+                    <ul></ul>
+                </div>
             </fieldset>
         </form>
         <table id="collection-table" class="pure-table pure-table-horizontal">
@@ -35,4 +38,28 @@
         </table>
     </div>
 </div>
+
+<script>
+    function addCardClicked(name) {
+        $("#add-card-input").val(name);
+        $("#add-card-form").submit();
+    }
+
+    $(document).ready(function() {
+        $("#add-card-input").keyup(function() {
+            $("#autocomplete ul").find('li').remove().end();
+            var val = $("#add-card-input").val();
+            if (val.length > 3) {
+                $.get("https://api.deckbrew.com/mtg/cards/typeahead?q=" + val, function(data) {
+                    var card;
+                    $("#autocomplete ul").find('li').remove().end();
+                    for (i = 0; i < data.length; i++) {
+                        card = data[i];
+                        $('#autocomplete ul').append("<li><a onclick=\"addCardClicked('" + card["name"].replace("'", "\\'") + "')\" href=\"#\">" + card["name"] + "</a></li>");
+                    }
+                });
+            }
+        });
+    });
+</script>
 {% endblock %}

@@ -123,12 +123,12 @@ def nearby():
     TIME_THRESHOLD = 15 # minutes
     if current_user.lat and current_user.lon:
         users = (User.query
+            .filter(User.last_active > db.func.now() - datetime.timedelta(minutes=TIME_THRESHOLD))
+            .filter(User.id != current_user.id)
             .filter(User.lat > current_user.lat - DISTANCE_THRESHOLD)
             .filter(User.lat < current_user.lat + DISTANCE_THRESHOLD)
             .filter(User.lon > current_user.lon - DISTANCE_THRESHOLD)
             .filter(User.lon < current_user.lon + DISTANCE_THRESHOLD)
-            .filter(User.last_active > db.func.now() - datetime.timedelta(minutes=TIME_THRESHOLD))
-            .filter(User.id != current_user.id)
             .order_by(db.func.lower(User.name))
             .all())
     else:
