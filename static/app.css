@@ -76,3 +76,9 @@ body {
 #autocomplete {
     border: 0;
 }
+
+.footer {
+    color: #bdc3c7;
+    font-size: 9px;
+    text-align: center;
+}
