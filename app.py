@@ -140,11 +140,12 @@ def nearby():
 def remove_card(card_id):
     # for removing a card from the logged in users collection
     card = Card.query.get(card_id)
-    if not card.user_id == current_user.id:
-        abort(401)
     if card:
-        db.session.delete(card)
-        db.session.commit()
+        if card.user_id == current_user.id:
+            db.session.delete(card)
+            db.session.commit()
+        else:
+            abort(401)
     return redirect(url_for('home'))
 
 @app.route('/card/add', methods=['POST'])
