@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% set active_page = "Nearby" %}
+{% set show_nav = True %}
+{% block content %}
+<div class="pure-g">
+    <div class="pure-u-1">
+        <div style="margin-bottom: 10px; text-align: center;">
+            Acquiring your location and redirecting you soon...<br/><br/>
+            <span style="font-size: 10pt;">We only store your single most recent latitude and longitude to show you nearby players.</span>
+        </div>
+    </div>
+</div>
+<script>
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            $.post(
+                "{{ url_for('user_location') }}",
+                { lat: position.coords.latitude, lon: position.coords.longitude},
+                function() {
+                    // success
+                    setTimeout(function() { window.location.replace("{{ url_for('nearby') }}") }, 3000);
+                }
+            );
+        }, function(err) { /* do nothing for now */ }, { enableHighAccuracy: true });
+    }
+</script>
+{% endblock %}

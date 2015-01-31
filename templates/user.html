@@ -4,6 +4,11 @@
 {% block content %}
 <div class="pure-g">
     <div class="pure-u-1">
+        <a href="{{ url_for('messages_send', to_user_id=user.id) }}">
+            <button type="button" id="send-message" class="pure-button button-primary">
+                Send {{ user.name }} a message
+            </button>
+        </a>
         <table id="collection-table" class="pure-table pure-table-horizontal">
             <thead>
                 <tr>

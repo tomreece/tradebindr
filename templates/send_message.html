@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% set active_page = "Messages" %}
+{% set show_nav = True %}
+{% block content %}
+<div class="pure-g">
+    <div class="pure-u-1">
+        <table id="collection-table" class="pure-table pure-table-horizontal">
+            <thead>
+                <tr>
+                    <th>Message to {{ to_user.name }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <form method="post" action="{{ url_for('messages_send_post') }}">
+                            <input type="hidden" name="to_user_id" value="{{ to_user.id }}"/>
+                            <textarea id="message-box" name="message" cols="30" rows="7"></textarea> 
+                            <br />
+                            <button type="submit" id="message-submit-button" class="pure-button button-primary pure-input-1">Send</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

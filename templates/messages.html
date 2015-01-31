@@ -2,5 +2,41 @@
 {% set active_page = "Messages" %}
 {% set show_nav = True %}
 {% block content %}
-<p>Coming soon!</p>
+<div class="pure-g">
+    <div class="pure-u-1">
+        <div style="font-size: 8pt; margin-bottom: 10px; text-align: center;">
+            Tap a message to reply.
+        </div>
+        <table id="collection-table" class="pure-table pure-table-horizontal">
+            <thead>
+                <tr>
+                    <th>Messages</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for message in messages %}
+                    {% if message.from_user.id == current_user.id %}
+                        <tr style="height: 51px; background-color: #f1f1f1;">
+                            <td>
+                                <span class="messages-from">You:</span> {{ message.message }}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr style="height: 51px;">
+                            <td>
+                                <a href="{{ url_for('messages_send', to_user_id=message.from_user.id) }}" class="user-name-link">
+                                    <span class="messages-from">{{ message.from_user.name }}:</span> {{ message.message }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% else %}
+                <tr style="height: 51px;">
+                    <td>You have no messages</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

@@ -49,7 +49,7 @@
         $("#add-card-input").keyup(function() {
             $("#autocomplete ul").find('li').remove().end();
             var val = $("#add-card-input").val();
-            if (val.length > 3) {
+            //if (val.length > 2) {
                 $.get("https://api.deckbrew.com/mtg/cards/typeahead?q=" + val, function(data) {
                     var card;
                     $("#autocomplete ul").find('li').remove().end();
@@ -58,7 +58,7 @@
                         $('#autocomplete ul').append("<li><a onclick=\"addCardClicked('" + card["name"].replace("'", "\\'") + "')\" href=\"#\">" + card["name"] + "</a></li>");
                     }
                 });
-            }
+            //}
         });
     });
 </script>

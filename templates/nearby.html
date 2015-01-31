@@ -15,7 +15,7 @@
                 <tr>
                     <td>
                         <a href="{{ url_for('user_by_id', user_id=user.id) }}" class="user-name-link">
-                            {{ user.name }}
+                            {{ user.name }} <span class="user-last-active">Last active: {{ user.pretty_last_active() }}</span>
                         </a>
                     </td>
                 </tr>

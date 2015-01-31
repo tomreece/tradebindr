@@ -73,8 +73,28 @@ body {
     display: block;
 }
 
+.user-last-active, .messages-from {
+    font-size: 12px;
+    color: #aaa;
+    font-style: italic;
+}
+
+#send-message {
+    margin: 0px 0px 10px 0px;
+    width: 100%;
+}
+
 #autocomplete {
     border: 0;
+}
+
+#message-box {
+    width: 98%;
+}
+
+#message-submit-button {
+    margin: 10px 0px 10px 0px;
+    width: 100%;
 }
 
 .footer {
