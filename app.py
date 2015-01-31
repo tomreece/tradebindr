@@ -197,7 +197,13 @@ def nearby():
             .all())
     else:
         return redirect(url_for('location'))
-    return render_template('nearby.html', users=users)
+    return render_template('nearby.html', users=users, which_traders='Nearby')
+
+@app.route('/all')
+@login_required
+def all_traders():
+    users = User.query.order_by(User.last_active.desc()).all()
+    return render_template('nearby.html', users=users, which_traders='All')
 
 @app.route('/card/<int:card_id>/remove')
 @login_required

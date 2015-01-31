@@ -18,14 +18,14 @@
                     {% if message.from_user.id == current_user.id %}
                         <tr style="height: 51px; background-color: #f1f1f1;">
                             <td>
-                                <span class="messages-from">You:</span> {{ message.message }}
+                                <span class="messages-from">To {{ message.to_user.name }}:</span> {{ message.message }}
                             </td>
                         </tr>
                     {% else %}
                         <tr style="height: 51px;">
                             <td>
                                 <a href="{{ url_for('messages_send', to_user_id=message.from_user.id) }}" class="user-name-link">
-                                    <span class="messages-from">{{ message.from_user.name }}:</span> {{ message.message }}
+                                    <span class="messages-from">From {{ message.from_user.name }}:</span> {{ message.message }}
                                 </a>
                             </td>
                         </tr>

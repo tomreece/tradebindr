@@ -7,7 +7,7 @@
         <table id="nearby-traders-table" class="pure-table pure-table-horizontal">
             <thead>
                 <tr>
-                    <th>Nearby Traders</th>
+                    <th>{{ which_traders }} Traders</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,7 +21,7 @@
                 </tr>
                 {% else %}
                 <tr>
-                    <td>No nearby traders. Tell your friends about tradebindr.com!</td>
+                    <td>No nearby traders.<br/><br/><a href="{{ url_for('all_traders') }}" class="pure-button button-primary">View all traders instead</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
