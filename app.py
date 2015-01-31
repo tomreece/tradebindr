@@ -62,6 +62,8 @@ class User(db.Model):
         """
         from datetime import datetime
         time = self.last_active
+        if not time:
+            return "never"
         now = datetime.now(pytz.utc)
         if type(time) is int:
             diff = now - datetime.fromtimestamp(time)
@@ -202,7 +204,10 @@ def nearby():
 @app.route('/all')
 @login_required
 def all_traders():
-    users = User.query.order_by(User.last_active.desc()).all()
+    users = (User.query
+        .filter(User.id != current_user.id)
+        .order_by(User.last_active == None, User.last_active.desc())
+        .all())
     return render_template('nearby.html', users=users, which_traders='All')
 
 @app.route('/card/<int:card_id>/remove')
