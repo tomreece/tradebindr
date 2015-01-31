@@ -18,6 +18,7 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 app.secret_key = '\nZ\x89\xf4N\x8d;^\xc5NOJ\x88H\x00p\xc5\x9d0\x13P\t2a'
 login_manager = LoginManager(app)
+login_manager.login_view = "/login"
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -138,18 +139,30 @@ class Message(db.Model):
 
 @app.route('/')
 def index():
-    # todo, detect if user already logged in and redirect to /home if so
-    return render_template('login.html')
+    return redirect(url_for('login'))
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     # for logging in a user
-    user = User.query.filter(db.func.lower(User.name) == request.form['name'].lower()).first()
-    if user and bcrypt.check_password_hash(user.password, request.form['password']):
-        login_user(user)
-        return redirect(url_for('home'))
+    if request.method == 'POST':
+        user = User.query.filter(db.func.lower(User.name) == request.form['name'].lower()).first()
+        if user and bcrypt.check_password_hash(user.password, request.form['password']):
+            login_user(user)
+            return redirect(request.args.get("next") or url_for('home'))
+        else:
+            abort(401)
     else:
-        abort(401)
+        # request.method is GET
+        if current_user.is_authenticated():
+            return redirect(url_for('home'))
+        else:
+            return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
 
 @app.route('/user/create')
 def create_user():
