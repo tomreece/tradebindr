@@ -6,7 +6,6 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import or_
 from flask.ext.login import LoginManager, login_required, login_user, current_user, logout_user
 from flask.ext.bcrypt import Bcrypt
-from marshmallow import Serializer
 
 #
 # SETUP
@@ -101,10 +100,6 @@ class User(db.Model):
             return str(day_diff / 30) + " months ago"
         return str(day_diff / 365) + " years ago"
 
-    class Serializer(Serializer):
-        class Meta:
-            fields = ("id", "name", "lat", "lon", "last_active")
-
 class Card(db.Model):
     __tablename__ = 'cards'
 
@@ -116,10 +111,6 @@ class Card(db.Model):
     def __init__(self, name, user_id):
         self.name = name
         self.user_id = user_id
-
-    class Serializer(Serializer):
-        class Meta:
-            fields = ("id", "name", "user_id")
 
 class Message(db.Model):
     __tablename__ = 'messages'
@@ -133,12 +124,21 @@ class Message(db.Model):
     time = db.Column(db.DateTime(timezone=True), index=True)
     is_read = db.Column(db.Boolean, default=False, server_default='FALSE')
 
+    def __init__(self, from_user_id, to_user_id, message, time):
+        self.from_user_id = from_user_id
+        self.to_user_id = to_user_id
+        self.message = message
+        self.time = time
+
 #
 # ROUTES
 #
 
 @app.route('/')
 def index():
+    # the root page
+    # TODO: eventually turn this route into a landing page that concisely
+    # describes tradebindr
     return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -160,13 +160,14 @@ def login():
 
 @app.route('/logout')
 def logout():
+    # for logging out the user
     logout_user()
     return redirect(url_for('index'))
-
 
 @app.route('/user/create')
 def create_user():
     # for viewing the create account page
+    # TODO: rename create_account.html to user_create.html to match the route
     return render_template('create_account.html')
 
 @app.route('/user/create', methods=['POST'])
@@ -174,6 +175,8 @@ def create_user_post():
     # for adding a new user
     existing_user = User.query.filter(db.func.lower(User.name) == request.form['name'].lower()).first()
     if existing_user:
+        # TODO: instead redirect back to the /user/create page with a flash
+        # message
         return "user already exists"
     hashed_password = bcrypt.generate_password_hash(request.form['password'])
     new_user = User(request.form['name'], hashed_password)
@@ -192,17 +195,21 @@ def home():
 @app.route('/location')
 @login_required
 def location():
+    # for acquiring the user's location
+    # TODO: move this route to /user/location
     return render_template('location.html')
 
 @app.route('/nearby')
 @login_required
 def nearby():
+    # for returning nearby traders
+    # TODO: parameterize the distance
+    # TODO: better explain/name the TIME_THRESHOLD variable
     DISTANCE_THRESHOLD = 0.6 # about 50 miles
     TIME_THRESHOLD = 5 # minutes
     if current_user.lat and current_user.lon and \
             current_user.last_active > datetime.datetime.now(pytz.utc) - datetime.timedelta(minutes=TIME_THRESHOLD):
         users = (User.query
-            #.filter(User.last_active > db.func.now() - datetime.timedelta(minutes=TIME_THRESHOLD))
             .filter(User.id != current_user.id)
             .filter(User.lat > current_user.lat - DISTANCE_THRESHOLD)
             .filter(User.lat < current_user.lat + DISTANCE_THRESHOLD)
@@ -211,12 +218,18 @@ def nearby():
             .order_by(User.last_active.desc())
             .all())
     else:
+        # if we land here, we haven't checked the current users location
+        # recently and need to re-acquire it
         return redirect(url_for('location'))
     return render_template('nearby.html', users=users, which_traders='Nearby')
 
 @app.route('/all')
 @login_required
 def all_traders():
+    # for returning all traders
+    # TODO: this is just a temporary route to give redditors something to look
+    # at because there will likely be no nearby traders when they try out the
+    # app
     users = (User.query
         .filter(User.id != current_user.id)
         .order_by(User.last_active == None, User.last_active.desc())
@@ -261,11 +274,13 @@ def user_location():
     current_user.lon = request.form['lon']
     current_user.last_active = db.func.now()
     db.session.commit()
+    # TODO: just return a status=200 or something instead of some bogus "ok"
     return "ok"
 
 @app.route('/messages')
 @login_required
 def messages():
+    # for viewing the logged in users messages
     messages = (Message.query
         .filter(or_(Message.to_user_id == current_user.id, Message.from_user_id == current_user.id))
         .order_by(Message.time.desc())
@@ -276,14 +291,17 @@ def messages():
 @app.route('/messages/send/<int:to_user_id>')
 @login_required
 def messages_send(to_user_id):
+    # for the logged in user to type a message to another user
     to_user = User.query.get(to_user_id)
     return render_template('send_message.html', to_user=to_user)
 
 @app.route('/messages/send', methods=['POST'])
 @login_required
 def messages_send_post():
+    # post endpoint for the form to send a message to another user
     to_user_id = request.form['to_user_id']
     message_body = request.form['message']
+    # TODO: use Message.__init__
     message = Message()
     message.from_user_id = current_user.id
     message.to_user_id = to_user_id
@@ -298,4 +316,5 @@ def messages_send_post():
 #
 
 if __name__ == '__main__':
+    # for testing locally, not used when deployed on Heroku
     app.run(debug=True, host='0.0.0.0')
