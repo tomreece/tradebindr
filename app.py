@@ -55,11 +55,9 @@ class User(db.Model):
     # /Flask-Login functions
 
     def pretty_last_active(self):
-        """
-        Get a datetime object or a int() Epoch timestamp and return a
-        pretty string like 'an hour ago', 'Yesterday', '3 months ago',
-        'just now', etc
-        """
+        # TODO: move this out into a utility function so that it can be
+        # reused throughout the site anywhere we want to show natural elapsed
+        # time
         from datetime import datetime
         time = self.last_active
         if not time:
