@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- id is ignored by phonegap build and comes from the provisioning profile
+     or signing key instead -->
+<widget id="com.tradebindr.app" version="1" versionCode="1"
+        xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+
+    <!-- To submit multiple builds of the same version to the app store, this number
+         needs to increment each time. For example, if I submit version 2.0 for the first
+         time, this value should be 1. Then if I discover a bug and need to resubmit a new
+         build of version 2.0, I'd increment this value to 2. The value can reset back to
+         1 when version 3.0 comes along. -->
+    <gap:config-file platform="ios" parent="CFBundleVersion">
+        <string>1</string>
+    </gap:config-file>
+
+    <name>Tradebindr</name>
+    <description>
+        Trade magic cards!
+    </description>
+    <author email="tomreece@gmail.com" href="http://www.tradebindr.com">
+        Tom Reece
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <access origin="mailto:*" launch-external="yes"/>
+
+<!--     <icon src="icon-default.png" />
+    <icon src="icon-60@3x.png" gap:platform="ios" width="180" height="180" />
+    <icon src="icon-60.png" gap:platform="ios" width="60" height="60" />
+    <icon src="icon-60@2x.png" gap:platform="ios" width="120" height="120" />
+    <icon src="icon-76.png" gap:platform="ios" width="76" height="76" />
+    <icon src="icon-76@2x.png" gap:platform="ios" width="152" height="152" />
+    <icon src="icon-small.png" gap:platform="ios" width="29" height="29" />
+    <icon src="icon-small@2x.png" gap:platform="ios" width="58" height="58" />
+    <icon src="icon-40.png" gap:platform="ios" width="40" height="40" />
+    <icon src="icon-40@2x.png" gap:platform="ios" width="80" height="80" />
+    <icon src="icon.png" gap:platform="ios" width="57" height="57" />
+    <icon src="icon@2x.png" gap:platform="ios" width="114" height="114" />
+    <icon src="icon-72.png" gap:platform="ios" width="72" height="72" />
+    <icon src="icon-72@2x.png" gap:platform="ios" width="144" height="144" />
+    <icon src="icon-50.png" gap:platform="ios" width="50" height="50" />
+    <icon src="icon-50@2x.png" gap:platform="ios" width="100" height="100" />
+
+    <icon src="mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
+    <icon src="hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
+    <icon src="xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
+    <icon src="xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
+
+
+    <gap:splash src="Default.png" gap:platform="ios" width="320" height="480" />
+    <gap:splash src="Default@2x.png" gap:platform="ios" width="640" height="960" />
+    <gap:splash src="Default-568h@2x.png" gap:platform="ios" width="640" height="1136" />
+    <gap:splash src="Default-667h@2x.png" gap:platform="ios" width="750" height="1334" />
+    <gap:splash src="Default-Portrait-736h@3x.png" gap:platform="ios" width="1242" height="2208" />
+    <gap:splash src="Default-Landscape-736h@3x.png" gap:platform="ios" width="2208" height="1242" />
+    <gap:splash src="Default-Portrait.png" gap:platform="ios" width="768" height="1024" />
+    <gap:splash src="Default-Landscape.png" gap:platform="ios" width="1024" height="768" />
+    <gap:splash src="Default-Portrait@2x.png" gap:platform="ios" width="1536" height="2048" />
+    <gap:splash src="Default-Landscape@2x.png" gap:platform="ios" width="2048" height="1536" /> -->
+
+    <!-- <gap:plugin name="com.phonegap.plugin.statusbar" />
+    <feature name="StatusBar">
+        <param name="ios-package" value="CDVStatusBar" onload="true" />
+    </feature> -->
+
+    <!-- prevent autodetection of phone numbers. otherwise ios will
+         recognize house number range (e.g. "1000-1099 Main St") as a phone
+         number. -->
+    <preference name="detect-data-types" value="false" />
+
+    <!-- page is sized for 100% height so user shouldn't be able to scroll up or down -->
+    <!-- <preference name="DisallowOverscroll" value="true" /> -->
+
+    <!-- XXX: do we need to include fi.avaus.cordova.geolocation plugin? It's
+         supposed to fix a problem with not getting error callback for
+         geolocation on android -->
+
+    <!-- enable geolocation -->
+    <gap:plugin name="org.apache.cordova.geolocation" version="0.3.10" />
+    <feature name="http://api.phonegap.com/1.0/geolocation"/>
+
+    <!-- push notifications! -->
+    <gap:plugin name="com.phonegap.plugins.pushplugin" version="2.4.0" />
+    <feature name="PushPlugin">
+        <param name="ios-package" value="PushPlugin" />
+    </feature>
+
+    <!-- allows us to detect android/ios/whatever -->
+    <gap:plugin name="org.apache.cordova.device" version="0.2.12" />
+
+    <!-- used for web SSO -->
+    <!-- <gap:plugin name="org.apache.cordova.inappbrowser" version="0.5.2" /> -->
+
+    <!-- nicer alert dialogs -->
+    <gap:plugin name="org.apache.cordova.dialogs" version="0.2.10" />
+</widget>
