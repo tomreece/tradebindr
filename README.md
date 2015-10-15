@@ -19,3 +19,12 @@ A site to help you find other nearby people to trade Magic: The Gathering cards 
 1. `quit()` we're done there
 1. You did it! Run the app with `python app.py`
 1. You should be able to go to [http://localhost:5000](http://localhost:5000)
+
+### Folder & File Descriptions
+
+* `phonegap` - a starting point for packaging this as a Phonegap app through [build.phonegap.com](build.phonegap.com)
+* `static` - static assets like images, css, javascript that Flask will serve for now
+* `templates` - templates used by render_template() calls in `app.py`
+* `app.py` - the entire application. needs to be split up into models and controllers.
+* `Procfile` - used by Heroku to launch the application
+* `requirements.txt` - python depedencies for installation with `pip install -r requirements.txt`
