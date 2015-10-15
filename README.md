@@ -24,6 +24,8 @@ A site to help you find other nearby people to trade Magic: The Gathering cards 
 
 * `phonegap` - a starting point for packaging this as a Phonegap app through [build.phonegap.com](build.phonegap.com)
 * `static` - static assets like images, css, javascript that Flask will serve for now
+    * `home.html` - has some javascript in it to perform card name autocompletion
+    * `location.html` - has some javascript in it to get the users location and ajax post it to the server
 * `templates` - templates used by render_template() calls in `app.py`
 * `app.py` - the entire application. needs to be split up into models and controllers.
 * `Procfile` - used by Heroku to launch the application
